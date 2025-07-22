@@ -5,6 +5,31 @@ import firebase_admin
 from firebase_admin import credentials, auth
 import os
 from datetime import timedelta
+import os
+import base64
+import json
+from dotenv import load_dotenv
+
+# Optional: load .env locally
+load_dotenv()
+
+# Decode and write Firebase credentials
+firebase_b64 = os.environ.get("FIREBASE_CREDENTIALS_BASE64")
+if firebase_b64:
+    with open("firebase-key.json", "wb") as f:
+        f.write(base64.b64decode(firebase_b64))
+else:
+    raise RuntimeError("Missing FIREBASE_CREDENTIALS_BASE64 env var")
+
+# Decode and write GCS credentials
+gcs_b64 = os.environ.get("GOOGLE_CREDENTIALS_BASE64")
+if gcs_b64:
+    with open("gcs-key.json", "wb") as f:
+        f.write(base64.b64decode(gcs_b64))
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "gcs-key.json"
+else:
+    raise RuntimeError("Missing GOOGLE_CREDENTIALS_BASE64 env var")
+
 
 app = Flask(__name__)
 CORS(app)
