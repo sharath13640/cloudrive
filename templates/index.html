@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🌩️ Cloudora</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      /* Root & Theme Styles */
+      :root {
+        --light-bg: #f0f4f8;
+        --dark-bg: #1e1e2f;
+        --light-card: #fff;
+        --dark-card: #2a2a3d;
+        --accent: #4f46e5;
+        --accent-hover: #3730a3;
+        --text-light: #0f172a;
+        --text-dark: #e2e8f0;
+        --transition: all 0.3s ease;
+      }
+      body {
+        font-family: "Manrope", sans-serif;
+        margin: 0;
+        background-color: var(--light-bg);
+        color: var(--text-light);
+        transition: var(--transition);
+      }
+      body.dark {
+        background-color: var(--dark-bg);
+        color: var(--text-dark);
+      }
+
+      /* Header */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background-color: var(--light-card);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: var(--transition);
+      }
+      body.dark header {
+        background-color: var(--dark-card);
+      }
+      .logo {
+        font-weight: 800;
+        font-size: 2.2rem;
+      }
+
+      .header-buttons {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .theme-toggle {
+        cursor: pointer;
+        font-size: 1.3rem;
+        transition: transform 0.2s ease;
+      }
+      .theme-toggle:hover {
+        transform: scale(1.2);
+      }
+
+      /* Containers */
+      .container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+      .upload-area,
+      .file-list {
+        background-color: var(--light-card);
+        padding: 1.5rem;
+        margin-top: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: var(--transition);
+      }
+      body.dark .upload-area,
+      body.dark .file-list {
+        background-color: var(--dark-card);
+      }
+
+      /* Files */
+      .file-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        border-bottom: 1px solid #ddd;
+      }
+      .file-item:hover {
+        background-color: #e6ecf3;
+      }
+      body.dark .file-item:hover {
+        background-color: #353544;
+      }
+      .file-icon {
+        font-size: 1.2rem;
+        margin-right: 0.6rem;
+      }
+
+      /* Inputs */
+      input[type="file"] {
+        margin-bottom: 1rem;
+      }
+      button {
+        padding: 0.6rem 1.2rem;
+        background-color: var(--accent);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+      button:hover {
+        background-color: var(--accent-hover);
+      }
+
+      /* Modal */
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+      }
+      .modal-content {
+        background: var(--light-card);
+        padding: 2rem;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+      }
+      body.dark .modal-content {
+        background: var(--dark-card);
+      }
+
+      input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+      }
+      .show-password {
+        position: relative;
+        display: flex;
+      }
+      .show-password input {
+        flex: 1;
+      }
+      .show-password .fa-eye {
+        position: absolute;
+        right: 10px;
+        top: 12px;
+        cursor: pointer;
+      }
+
+      /* Toast */
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: #fff;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease;
+        z-index: 1000;
+      }
+      .toast.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      #signOutBtn {
+        display: none;
+      }
+
+      /* Upload Progress */
+      #progressBar {
+        width: 100%;
+        height: 10px;
+        background: #ddd;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-top: 10px;
+        display: none;
+      }
+      #progressFill {
+        width: 0%;
+        height: 100%;
+        background-color: var(--accent);
+        transition: width 0.3s ease;
+      }
+
+      .username {
+        font-weight: bold;
+        margin-right: 10px;
+      }
+    </style>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  </head>
+  <body>
+    <div class="toast" id="toast">Action completed</div>
+
+    <header>
+      <div class="logo">🌩️ Cloudora</div>
+      <div class="header-buttons">
+        <span class="username" id="userNameDisplay"></span>
+        <button id="signOutBtn" onclick="signOut()">🚪 Sign Out</button>
+        <div class="theme-toggle" onclick="toggleTheme()">
+          <i class="fa-solid fa-circle-half-stroke"></i>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="upload-area" id="mainApp" style="display: none">
+        <h3>⬆️ Upload a File</h3>
+        <form id="uploadForm">
+          <input type="file" id="fileInput" required />
+          <button type="submit">📤 Upload</button>
+          <div id="progressBar"><div id="progressFill"></div></div>
+        </form>
+      </div>
+
+      <div class="file-list" id="fileListWrapper" style="display: none">
+        <h3>📂 Your Files</h3>
+        <button onclick="listFiles()">🔄 Refresh</button>
+        <ul id="fileList"></ul>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="authModal">
+      <div class="modal-content">
+        <h2>🔐 Sign In</h2>
+        <input type="email" id="email" placeholder="Email" />
+        <div class="show-password">
+          <input type="password" id="password" placeholder="Password" />
+          <i class="fa fa-eye" onclick="togglePassword(this)"></i>
+        </div>
+        <div class="auth-buttons">
+          <button onclick="signIn()">Sign In</button>
+          <button onclick="signUp()">Sign Up</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const api = "http://127.0.0.1:5000";
+      let idToken = "";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCJuRqnMqtFGV8Ve2xcRE8kEtL6zpy-_IY",
+        authDomain: "clouddrive-b89e6.firebaseapp.com",
+        projectId: "clouddrive-b89e6",
+        appId: "1:594104184227:web:c7b89585984a08beb23e16",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          user.getIdToken().then((token) => {
+            idToken = token;
+            document.getElementById("authModal").style.display = "none";
+            document.getElementById("mainApp").style.display = "block";
+            document.getElementById("fileListWrapper").style.display = "block";
+            document.getElementById("signOutBtn").style.display =
+              "inline-block";
+            document.getElementById(
+              "userNameDisplay"
+            ).textContent = `👤 ${user.email}`;
+            listFiles();
+          });
+        } else {
+          document.getElementById("authModal").style.display = "flex";
+          document.getElementById("mainApp").style.display = "none";
+          document.getElementById("fileListWrapper").style.display = "none";
+          document.getElementById("signOutBtn").style.display = "none";
+          document.getElementById("userNameDisplay").textContent = "";
+        }
+      });
+
+      async function signIn() {
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        try {
+          await firebase.auth().signInWithEmailAndPassword(email, password);
+          showToast("Signed in successfully!");
+        } catch (error) {
+          showToast("Sign-in error: " + error.message);
+        }
+      }
+
+      async function signUp() {
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        try {
+          await firebase.auth().createUserWithEmailAndPassword(email, password);
+          showToast("Account created!");
+        } catch (error) {
+          showToast("Sign-up error: " + error.message);
+        }
+      }
+
+      function signOut() {
+        firebase.auth().signOut();
+        showToast("Signed out!");
+      }
+
+      function toggleTheme() {
+        document.body.classList.toggle("dark");
+      }
+
+      function togglePassword(icon) {
+        const input = icon.previousElementSibling;
+        input.type = input.type === "password" ? "text" : "password";
+        icon.classList.toggle("fa-eye-slash");
+      }
+
+      function getFileIcon(file) {
+        const ext = file.split(".").pop().toLowerCase();
+
+        // Image files
+        if (["jpg", "jpeg", "png", "gif", "webp", "svg"].includes(ext))
+          return '<i class="fa-regular fa-image file-icon"></i>';
+
+        // PDF
+        if (ext === "pdf")
+          return '<i class="fa-regular fa-file-pdf file-icon"></i>';
+
+        // Word documents
+        if (["doc", "docx"].includes(ext))
+          return '<i class="fa-regular fa-file-word file-icon"></i>';
+
+        // Excel documents
+        if (["xls", "xlsx"].includes(ext))
+          return '<i class="fa-regular fa-file-excel file-icon"></i>';
+
+        // PowerPoint files
+        if (["ppt", "pptx"].includes(ext))
+          return '<i class="fa-regular fa-file-powerpoint file-icon"></i>';
+
+        // Text or markdown
+        if (["txt", "md"].includes(ext))
+          return '<i class="fa-regular fa-file-lines file-icon"></i>';
+
+        // Code files
+        if (
+          [
+            "html",
+            "css",
+            "js",
+            "ts",
+            "json",
+            "py",
+            "java",
+            "c",
+            "cpp",
+            "cs",
+          ].includes(ext)
+        )
+          return '<i class="fa-regular fa-file-code file-icon"></i>';
+
+        // Audio
+        if (["mp3", "wav", "ogg"].includes(ext))
+          return '<i class="fa-regular fa-file-audio file-icon"></i>';
+
+        // Video
+        if (["mp4", "mkv", "avi", "mov", "webm"].includes(ext))
+          return '<i class="fa-regular fa-file-video file-icon"></i>';
+
+        // Compressed/archives
+        if (["zip", "rar", "7z", "tar", "gz"].includes(ext))
+          return '<i class="fa-regular fa-file-zipper file-icon"></i>';
+
+        // Default
+        return '<i class="fa-regular fa-file file-icon"></i>';
+      }
+
+      document.getElementById("uploadForm").onsubmit = async (e) => {
+        e.preventDefault();
+        const file = document.getElementById("fileInput").files[0];
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", `${api}/upload`);
+        xhr.setRequestHeader("Authorization", "Bearer " + idToken);
+
+        const progressBar = document.getElementById("progressBar");
+        const progressFill = document.getElementById("progressFill");
+        progressBar.style.display = "block";
+        progressFill.style.width = "0%";
+
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            progressFill.style.width = percent + "%";
+          }
+        };
+
+        xhr.onload = () => {
+          progressBar.style.display = "none";
+          showToast(xhr.responseText);
+          listFiles();
+        };
+
+        xhr.onerror = () => {
+          progressBar.style.display = "none";
+          showToast("Upload failed.");
+        };
+
+        xhr.send(formData);
+      };
+
+      async function listFiles() {
+        const res = await fetch(`${api}/list`, {
+          headers: { Authorization: "Bearer " + idToken },
+        });
+        const files = await res.json();
+        const list = document.getElementById("fileList");
+        list.innerHTML = "";
+        files.forEach((file) => {
+          const li = document.createElement("li");
+          li.className = "file-item";
+          li.innerHTML = `
+          <span>${getFileIcon(file)} ${file.split("/").pop()}</span>
+          <span>
+            <button onclick="downloadFile('${file}')"><i class="fa fa-download"></i></button>
+            <button onclick="deleteFile('${file}')"><i class="fa fa-trash"></i></button>
+          </span>`;
+          list.appendChild(li);
+        });
+      }
+
+      async function downloadFile(file) {
+        const res = await fetch(`${api}/download/${encodeURIComponent(file)}`, {
+          headers: { Authorization: "Bearer " + idToken },
+        });
+        const { url } = await res.json();
+        window.location = url;
+      }
+
+      async function deleteFile(file) {
+        await fetch(`${api}/delete/${encodeURIComponent(file)}`, {
+          method: "DELETE",
+          headers: { Authorization: "Bearer " + idToken },
+        });
+        showToast("File deleted.");
+        listFiles();
+      }
+
+      function showToast(msg) {
+        const toast = document.getElementById("toast");
+        toast.innerText = msg;
+        toast.classList.add("show");
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 2500);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,63 @@
+Projects
+-------------
+MY CLOUD DRIVE - Personal Cloud Storage
+Amazon S3 - Storage Bucket 5GB Free valid for 12 months
+✅ Project Features:
+Upload
+Download
+Delete
+List
+Authentication-ready (use Firebase Auth or OAuth2 with extensions)
+Google Cloud Storage for file handling
+--
+A Flask app is a web application built using the Flask framework in Python.
+What does a Flask app do?
+
+📦 Handles routes like /upload or /login (via HTTP methods like GET, POST)
+
+🧠 Runs Python logic behind those routes (e.g., store a file, query a database)
+
+🖥️ Returns responses (HTML pages, JSON data, file downloads, etc.)
+
+✅ In your project:
+Your Flask app handles file uploads, lists stored files from Google Cloud Storage, and lets users download or delete them — all via API routes defined in Python.
+--
+python -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+pip install -r requirements.txt  explain this
+
+ChatGPT said:
+Sure! Here's a clear explanation of each command you listed — they’re commonly used to set up a Python project with isolated dependencies using a virtual environment:
+
+🐍 1. python -m venv venv
+This creates a new virtual environment named venv.
+
+📦 A virtual environment is an isolated Python environment where you can install packages without affecting the global Python installation.
+
+The directory venv/ will contain its own Python interpreter and libraries.
+
+➡️ After running this, you’ll see a new folder named venv/ created in your project directory.
+
+💻 2. source venv/bin/activate
+(Or on Windows: venv\Scripts\activate)
+
+This command activates the virtual environment.
+
+On macOS/Linux: use source venv/bin/activate
+
+On Windows: use venv\Scripts\activate
+
+✅ Once activated, your terminal prompt may change to show (venv), and any packages you install with pip will go into the virtual environment instead of the global system.
+
+📥 3. pip install -r requirements.txt
+This installs all the Python packages listed in the file requirements.txt.
+
+requirements.txt is a plain text file containing a list of Python libraries and their versions, for example:
+
+
+Flask==2.3.2
+google-cloud-storage==2.14.0
+gunicorn==21.2.0
+📦 This ensures your project has all the necessary dependencies installed in the virtual environment.
+
+--

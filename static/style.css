@@ -1,0 +1,117 @@
+:root {
+  --bg-day: #f4f4f9;
+  --text-day: #222;
+  --card-day: #ffffff;
+  --accent-day: #4a90e2;
+
+  --bg-night: #1e1e2f;
+  --text-night: #f1f1f1;
+  --card-night: #2c2c3e;
+  --accent-night: #8ab4f8;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 2em;
+  background-color: var(--bg-day);
+  color: var(--text-day);
+  transition: all 0.5s ease;
+}
+
+body.night {
+  background-color: var(--bg-night);
+  color: var(--text-night);
+}
+
+h1 {
+  font-size: 2em;
+  text-align: center;
+  margin-bottom: 1em;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  0% { text-shadow: 0 0 5px #999; }
+  100% { text-shadow: 0 0 15px var(--accent-day); }
+}
+
+form, ul {
+  max-width: 600px;
+  margin: auto;
+}
+
+input[type="file"] {
+  display: block;
+  margin-bottom: 15px;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 6px 4px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--accent-day);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+body.night button {
+  background-color: var(--accent-night);
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background-color: var(--card-day);
+  margin: 10px 0;
+  padding: 12px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.4s;
+}
+
+body.night li {
+  background-color: var(--card-night);
+}
+
+.file-icon {
+  margin-right: 10px;
+  font-size: 1.3em;
+}
+
+.toggle-theme {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: 2px solid var(--accent-day);
+  color: var(--accent-day);
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+body.night .toggle-theme {
+  border-color: var(--accent-night);
+  color: var(--accent-night);
+}
+
+.toggle-theme:hover {
+  transform: rotate(20deg);
+  background-color: rgba(255,255,255,0.1);
+}
