@@ -62,4 +62,9 @@ GOOGLE_CREDENTIALS_BASE64=your_base64_encoded_gcs_key
 
 ## 📸 Screenshots
 
+<img width="1920" height="1080" alt="Screenshot (136)" src="https://github.com/user-attachments/assets/860b4e95-f4f9-410d-92ad-928fa13aa05f" />
+<img width="1920" height="1080" alt="Screenshot (137)" src="https://github.com/user-attachments/assets/3a857f81-7d73-4e53-bea2-fd1cce83df07" />
+<img width="1920" height="1080" alt="Screenshot (139)" src="https://github.com/user-attachments/assets/16f5b849-6d01-4f11-a653-dea2966a279c" />
+<img width="1920" height="1080" alt="Screenshot (141)" src="https://github.com/user-attachments/assets/d14abbd8-e2da-4ea4-a774-2232819c494d" />
+<img width="1920" height="1080" alt="Screenshot (142)" src="https://github.com/user-attachments/assets/8078cae0-309e-4cc7-b78d-70f16b6329e4" />
 
