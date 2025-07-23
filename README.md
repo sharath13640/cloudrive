@@ -25,8 +25,7 @@ Cloudrive is a web-based file storage system that allows users to securely uploa
 - dotenv (.env for secure local testing)
 - Render (for deployment)
 
----![WhatsApp Image 2025-07-23 at 12 24 35_3621594b](https://github.com/user-attachments/assets/7d93b45c-7800-4962-a7b1-96d6054689f8)
-
+---
 
 ## 📁 Project Structure
 
